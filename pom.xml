@@ -33,40 +33,6 @@
 	</developers>
 	
 	<build>
-		<!-- 主资源目录 -->  
-        <resources>  
-            <resource>  
-                <!-- 设定主资源目录  -->  
-                <directory>src/main/resources</directory>
-                  
-                <!-- maven default生命周期，process-resources阶段执行maven-resources-plugin插件的resources目标处理主资源目下的资源文件时，只处理如下配置中包含的资源类型   
-                <includes>  
-                    <include>*.xml</include>  
-                </includes>  
-                 -->  
-                   
-                <!-- maven default生命周期，process-resources阶段执行maven-resources-plugin插件的resources目标处理主资源目下的资源文件时，不处理如下配置中包含的资源类型（剔除下如下配置中包含的资源类型）   
-                <excludes>  
-                    <exclude>*.xml</exclude>  
-                </excludes>  
-                -->  
-                  
-                <!-- maven default生命周期，process-resources阶段执行maven-resources-plugin插件的resources目标处理主资源目下的资源文件时，指定处理后的资源文件输出目录，默认是${build.outputDirectory}指定的目录  
-                <targetPath>d:/</targetPath>  
-                   -->  
-                    
-                <!-- maven default生命周期，process-resources阶段执行maven-resources-plugin插件的resources目标处理主资源目下的资源文件时，是否对主资源目录开启资源过滤 
-                <filtering>true</filtering>  
-                  -->  
-            </resource>  
-        </resources> 
-		<filters>  
-	        <!-- 过滤文件,通常是一个属性文件（名值对的形式） 
-	        <filter>src/main/webapp/META-INF/auto-config.properties</filter>  -->  
-	        <!-- 
-	            <filter>${user.home}/antx.properties</filter> 
-	        -->  
-	    </filters> 
 		<pluginManagement>
 			<plugins>
 				<!-- 编译插件：编译主代码至主输出目录 -->  
