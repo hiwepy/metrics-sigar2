@@ -61,8 +61,8 @@ public class OSEnvInfo_Test extends TestCase {
 	public void testCpuInfos() throws Exception {
 		System.out.println("======================CpuInfos=============================");
 		Sigar sigar = (Sigar) SigarFactory.newSigar();
-		List<Map<String, Double>> infoMap = OSEnvInfo.cpuInfos(sigar);
-		for (Map<String, Double> map : infoMap) {
+		List<Map<String, Object>> infoMap = OSEnvInfo.cpuInfos(sigar);
+		for (Map<String, Object> map : infoMap) {
 			for (String key : map.keySet()) {
 				System.out.println(key + " : " + map.get(key));
 			}

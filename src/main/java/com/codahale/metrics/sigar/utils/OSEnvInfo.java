@@ -100,40 +100,38 @@ public class OSEnvInfo {
         
 	}
 	
-	public static Map<String, Object> memory(Sigar sigar) {
+public static Map<String, Object> memory(Sigar sigar) {
 		
 		Map<String, Object> monitorMap = new HashMap<String, Object>();
 		try {
 			
 			Runtime r = Runtime.getRuntime();
 			
-			monitorMap.put(JVM_MEMORY + ".total", CapacityUtils.getCapacityString(r.totalMemory(), Unit.MB, 2) );// java总内存
-			monitorMap.put(JVM_MEMORY + ".used", CapacityUtils.getCapacityString(r.totalMemory() - r.freeMemory(), Unit.MB, 2));// JVM使用内存
-			monitorMap.put(JVM_MEMORY + ".free", CapacityUtils.getCapacityString(r.freeMemory(), Unit.MB, 2));// JVM剩余内存
+			monitorMap.put(JVM_MEMORY + ".total", r.totalMemory() );// java总内存
+			monitorMap.put(JVM_MEMORY + ".used", r.totalMemory());// JVM使用内存
+			monitorMap.put(JVM_MEMORY + ".free", r.freeMemory());// JVM剩余内存
 			monitorMap.put(JVM_MEMORY + ".usage", CapacityUtils.div(r.totalMemory() - r.freeMemory(), r.totalMemory(), 2));// JVM使用率
 
 			Mem mem = sigar.getMem();
 			// 内存总量
-			monitorMap.put("os.ram.total", CapacityUtils.getCapacityString(mem.getTotal(), Unit.GB));// 内存总量
-			monitorMap.put("os.ram.used", CapacityUtils.getCapacityString(mem.getUsed(), Unit.GB));// 当前内存使用量
-			monitorMap.put("os.ram.free", CapacityUtils.getCapacityString(mem.getFree(), Unit.GB));// 当前内存剩余量
+			monitorMap.put("os.ram.total",mem.getTotal());// 内存总量
+			monitorMap.put("os.ram.used", mem.getUsed());// 当前内存使用量
+			monitorMap.put("os.ram.free", mem.getFree());// 当前内存剩余量
 			monitorMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
 
 			Swap swap = sigar.getSwap();
 			// 交换区总量
-			monitorMap.put("os.swap.total", CapacityUtils.getCapacityString(swap.getTotal(), Unit.GB));
+			monitorMap.put("os.swap.total", swap.getTotal());
 			// 当前交换区使用量
-			monitorMap.put("os.swap.used", CapacityUtils.getCapacityString(swap.getUsed(), Unit.GB));
+			monitorMap.put("os.swap.used", swap.getUsed());
 			// 当前交换区剩余量
-			monitorMap.put("os.swap.free", CapacityUtils.getCapacityString(swap.getFree(), Unit.GB));
+			monitorMap.put("os.swap.free", swap.getFree());
 			monitorMap.put("os.swap.usage", CapacityUtils.div(swap.getUsed(), swap.getTotal(), 2));
 
 		} catch (Exception e) {
 		}
 		return monitorMap;
 	}
-	
-	
 	
 	public static Map<String, Double> usage(Sigar sigar) {
 		
@@ -147,9 +145,9 @@ public class OSEnvInfo {
 			// 内存总量
 			monitorMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
 			
- 			List<Map<String, Double>> cpu = cpuInfos(sigar);
+ 			List<Map<String, Object>> cpu = cpuInfos(sigar);
 			double b = 0.0;
-			for (Map<String, Double> m : cpu) {
+			for (Map<String, Object> m : cpu) {
 				b += Double.valueOf(m.get("os.cpu.total")+"");
 			}
 			// cpu使用率
@@ -188,12 +186,12 @@ public class OSEnvInfo {
 	 * @param sigar
 	 * @return
 	 */
-	public static List<Map<String, Double>> cpuInfos(Sigar sigar) {
-		List<Map<String, Double>> monitorMaps = new ArrayList<Map<String, Double>>();
+	public static List<Map<String, Object>> cpuInfos(Sigar sigar) {
+		List<Map<String, Object>> monitorMaps = new ArrayList<Map<String, Object>>();
 		try {
 			CpuPerc cpuList[] = sigar.getCpuPercList();
 			for (CpuPerc cpuPerc : cpuList) {
-				Map<String, Double> monitorMap = new HashMap<String, Double>();
+				Map<String, Object> monitorMap = new HashMap<String, Object>();
 				monitorMap.put("os.cpu.irq", cpuPerc.getIrq());// 硬中断消耗时间
 				monitorMap.put("os.cpu.softIrq", cpuPerc.getSoftIrq());// 软中断消耗时间
 				monitorMap.put("os.cpu.stolen", cpuPerc.getStolen());// 虚拟机偷取时间
@@ -209,6 +207,7 @@ public class OSEnvInfo {
 		}
 		return monitorMaps;
 	}
+ 
 
 	public static List<Map<String, Object>> diskInfos(Sigar sigar) throws Exception {
 		List<Map<String, Object>> monitorMaps = new ArrayList<Map<String, Object>>();
