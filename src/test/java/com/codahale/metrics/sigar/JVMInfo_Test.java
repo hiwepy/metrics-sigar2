@@ -15,14 +15,26 @@
  */
 package com.codahale.metrics.sigar;
 
+import java.util.List;
 import java.util.Map;
 
 import com.codahale.metrics.sigar.utils.CapacityUtils.Unit;
 import com.codahale.metrics.sigar.utils.JVMInfo;
+import com.codahale.metrics.sigar.utils.MemoryInfo;
 
 import junit.framework.TestCase;
 
 public class JVMInfo_Test extends TestCase {
+
+	public void testOs() throws Exception {
+		
+		System.out.println("======================OS=============================");
+		
+		Map<String, Object> infoMap = JVMInfo.os();
+		for (String key : infoMap.keySet()) {
+			System.out.println(key + " : " + infoMap.get(key));
+		}
+	}
 
 	public void testInfo() throws Exception {
 		System.out.println("======================info=============================");
@@ -42,5 +54,46 @@ public class JVMInfo_Test extends TestCase {
 		System.out.println(JVMInfo.runtime(Unit.KB));
 
 	}*/
+	
+	public void testMemory() throws Exception {
+		
+		System.out.println("======================memory=============================");
+		
+		List<MemoryInfo> infoList = JVMInfo.memory(Unit.KB);
+		for (MemoryInfo memoryMap : infoList) {
+			System.out.println( memoryMap.getType() + ":" + memoryMap.toMap());
+			System.out.println( memoryMap.getType() + ":" +memoryMap.toString());
+            System.out.println("===================================================");
+		}
+	}
+	
+	public void testMemoryPool() throws Exception {
+		
+		System.out.println("======================memoryPool=============================");
+		 
+		List<MemoryInfo> infoList = JVMInfo.memoryPool(Unit.KB);
+		for (MemoryInfo memoryMap : infoList) {
+			System.out.println( memoryMap.getType() + ":" + memoryMap.toMap());
+			System.out.println( memoryMap.getType() + ":" +memoryMap.toString());
+            System.out.println("===================================================");
+		}
+	}
+	
+	public void testCompilation() throws Exception {
+		System.out.println("==========================Compilation=========================");
+		Map<String, Object> infoMap = JVMInfo.compilation();
+		for (String key : infoMap.keySet()) {
+			System.out.println(key + " : " + infoMap.get(key));
+		}
+	}
+	
+	public void testGc() throws Exception {
+		System.out.println("==========================GarbageCollector=========================");
+		for (Map<String, Object> infoMap : JVMInfo.gc()) {
+			for (String key : infoMap.keySet()) {
+				System.out.println(key + " : " + infoMap.get(key));
+			}
+		}
+	}
 
 }

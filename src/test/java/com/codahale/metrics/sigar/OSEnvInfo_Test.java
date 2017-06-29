@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public class OSEnvInfo_Test extends TestCase {
 
 	public void testInfo() throws Exception {
-		System.out.println("======================memory=============================");
+		System.out.println("======================Info=============================");
 		Sigar sigar = (Sigar) SigarFactory.newSigar();
 		Map<String, Object> infoMap = OSEnvInfo.info(sigar);
 		for (String key : infoMap.keySet()) {

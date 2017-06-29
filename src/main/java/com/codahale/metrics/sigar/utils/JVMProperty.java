@@ -46,6 +46,10 @@ public enum JVMProperty {
 	 */
 	JAVA_VM_SPECIFICATION_NAME("java.vm.specification.name"),
 	/**
+	 * Java的虚拟机PID
+	 */
+	JAVA_VM_PID("java.vm.pid"),
+	/**
 	 * Java的虚拟机实现名称
 	 */
 	JAVA_VM_NAME("java.vm.name"),
@@ -58,15 +62,15 @@ public enum JVMProperty {
 	 */
 	JAVA_VM_VERSION("java.vm.version"),
 	/**
-	 * Java的虚拟机实现版本
+	 * Java的虚拟机参数
 	 */
 	JAVA_VM_OPTIONS("java.vm.options"),
 	/**
-	 * Java的虚拟机实现版本
+	 * Java的虚拟机启动时间
 	 */
 	JAVA_RUNTIME_STARTTIME("jvm.runtime.StartTime"),
 	/**
-	 * Java的虚拟机实现版本
+	 * Java的虚拟机进程CPU时间
 	 */
 	JAVA_RUNTIME_UPTIME("jvm.runtime.Uptime"),
 	/**
@@ -82,9 +86,17 @@ public enum JVMProperty {
 	 */
 	JAVA_SPECIFICATION_VERSION("java.specification.version"),
 	/**
+	 * Java运行时虚拟机实现的管理接口的规范版本
+	 */
+	JAVA_MANAGEMENT_SPECIFICATION_VERSION("java.management.specification.version"),
+	/**
 	 * Java的类格式版本号
 	 */
 	JAVA_CLASS_VERSION("java.class.version"),
+	/**
+	 * Java的引导类加载器用于搜索类文件的引导类路径
+	 */
+	JAVA_BOOT_CLASS_PATH("java.boot.class.path"),
 	/**
 	 * Java的类路径
 	 */

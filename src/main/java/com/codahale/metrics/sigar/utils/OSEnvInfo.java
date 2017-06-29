@@ -23,9 +23,6 @@ import com.codahale.metrics.sigar.utils.CapacityUtils.Unit;
  */
 public class OSEnvInfo {
 	
-	public static final String JVM_MEMORY = "jvm.memory";
-	
-	
 	public static Map<String, Object> info(Sigar sigar){
 		
 		System.out.println("==========================OperatingSystem=========================");
@@ -100,62 +97,67 @@ public class OSEnvInfo {
         
 	}
 	
-public static Map<String, Object> memory(Sigar sigar) {
+	public static Map<String, Object> memory(Sigar sigar) {
+		return memory(sigar, Unit.NONE);
+	}
+	
+	public static Map<String, Object> memory(Sigar sigar, Unit unit) {
 		
-		Map<String, Object> monitorMap = new HashMap<String, Object>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		try {
 			
-			Runtime r = Runtime.getRuntime();
+			//JVM内存使用情况
+			dataMap.putAll(JVMInfo.runtime(unit));
 			
-			monitorMap.put(JVM_MEMORY + ".total", r.totalMemory() );// java总内存
-			monitorMap.put(JVM_MEMORY + ".used", r.totalMemory());// JVM使用内存
-			monitorMap.put(JVM_MEMORY + ".free", r.freeMemory());// JVM剩余内存
-			monitorMap.put(JVM_MEMORY + ".usage", CapacityUtils.div(r.totalMemory() - r.freeMemory(), r.totalMemory(), 2));// JVM使用率
-
 			Mem mem = sigar.getMem();
 			// 内存总量
-			monitorMap.put("os.ram.total",mem.getTotal());// 内存总量
-			monitorMap.put("os.ram.used", mem.getUsed());// 当前内存使用量
-			monitorMap.put("os.ram.free", mem.getFree());// 当前内存剩余量
-			monitorMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
+			dataMap.put("os.ram.total", CapacityUtils.getCapacity( mem.getTotal(), unit));// 内存总量
+			dataMap.put("os.ram.used", CapacityUtils.getCapacity( mem.getUsed(), unit));// 当前内存使用量
+			dataMap.put("os.ram.free", CapacityUtils.getCapacity( mem.getFree(), unit));// 当前内存剩余量
+			dataMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
 
 			Swap swap = sigar.getSwap();
 			// 交换区总量
-			monitorMap.put("os.swap.total", swap.getTotal());
+			dataMap.put("os.swap.total", CapacityUtils.getCapacity( swap.getTotal(), unit));
 			// 当前交换区使用量
-			monitorMap.put("os.swap.used", swap.getUsed());
+			dataMap.put("os.swap.used", CapacityUtils.getCapacity( swap.getUsed(), unit));
 			// 当前交换区剩余量
-			monitorMap.put("os.swap.free", swap.getFree());
-			monitorMap.put("os.swap.usage", CapacityUtils.div(swap.getUsed(), swap.getTotal(), 2));
-
+			dataMap.put("os.swap.free", CapacityUtils.getCapacity( swap.getFree(), unit));
+			dataMap.put("os.swap.usage", CapacityUtils.div(swap.getUsed(), swap.getTotal(), 2));
+			//时间戳
+			dataMap.put("os.timestamp", System.currentTimeMillis());
 		} catch (Exception e) {
 		}
-		return monitorMap;
+		return dataMap;
 	}
 	
 	public static Map<String, Double> usage(Sigar sigar) {
 		
-		Map<String, Double> monitorMap = new HashMap<String, Double>();
+		Map<String, Double> dataMap = new HashMap<String, Double>();
 		
 		try {
-			Runtime r = Runtime.getRuntime();
-			monitorMap.put(JVM_MEMORY + ".usage", CapacityUtils.div(r.totalMemory()-r.freeMemory(), r.totalMemory(), 2));// JVM使用率
+			
+			//JVM使用率
+			dataMap.putAll(JVMInfo.usage());
 
 			Mem mem = sigar.getMem();
-			// 内存总量
-			monitorMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
+			// 内存使用率
+			dataMap.put("os.ram.usage", CapacityUtils.div(mem.getUsed(), mem.getTotal(), 2));// 内存使用率
 			
  			List<Map<String, Object>> cpu = cpuInfos(sigar);
 			double b = 0.0;
 			for (Map<String, Object> m : cpu) {
 				b += Double.valueOf(m.get("os.cpu.total")+"");
 			}
-			// cpu使用率
-			monitorMap.put("os.cpu.usage", CapacityUtils.div(b, cpu.size(), 2));
+			// CPU使用率
+			dataMap.put("os.cpu.usage", CapacityUtils.div(b, cpu.size(), 2));
+			//时间戳
+			dataMap.put("os.timestamp", Double.valueOf(System.currentTimeMillis()));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return monitorMap;
+		return dataMap;
 	}
 
 	/**
@@ -191,29 +193,28 @@ public static Map<String, Object> memory(Sigar sigar) {
 		try {
 			CpuPerc cpuList[] = sigar.getCpuPercList();
 			for (CpuPerc cpuPerc : cpuList) {
-				Map<String, Object> monitorMap = new HashMap<String, Object>();
-				monitorMap.put("os.cpu.irq", cpuPerc.getIrq());// 硬中断消耗时间
-				monitorMap.put("os.cpu.softIrq", cpuPerc.getSoftIrq());// 软中断消耗时间
-				monitorMap.put("os.cpu.stolen", cpuPerc.getStolen());// 虚拟机偷取时间
-				monitorMap.put("os.cpu.nice", cpuPerc.getNice()); //用做nice加权的进程分配的用户态cpu时间比
-				monitorMap.put("os.cpu.user",  cpuPerc.getUser());// 用户使用率
-				monitorMap.put("os.cpu.system",  cpuPerc.getSys());// 系统使用率
-				monitorMap.put("os.cpu.wait",  cpuPerc.getWait());// 当前等待率
-				monitorMap.put("os.cpu.idle",  cpuPerc.getIdle());// 当前空闲率
-				monitorMap.put("os.cpu.total", cpuPerc.getCombined());// 总的使用率
-				monitorMaps.add(monitorMap);
+				Map<String, Object> dataMap = new HashMap<String, Object>();
+				dataMap.put("os.cpu.irq", cpuPerc.getIrq());// 硬中断消耗时间
+				dataMap.put("os.cpu.softIrq", cpuPerc.getSoftIrq());// 软中断消耗时间
+				dataMap.put("os.cpu.stolen", cpuPerc.getStolen());// 虚拟机偷取时间
+				dataMap.put("os.cpu.nice", cpuPerc.getNice()); //用做nice加权的进程分配的用户态cpu时间比
+				dataMap.put("os.cpu.user",  cpuPerc.getUser());// 用户使用率
+				dataMap.put("os.cpu.system",  cpuPerc.getSys());// 系统使用率
+				dataMap.put("os.cpu.wait",  cpuPerc.getWait());// 当前等待率
+				dataMap.put("os.cpu.idle",  cpuPerc.getIdle());// 当前空闲率
+				dataMap.put("os.cpu.total", cpuPerc.getCombined());// 总的使用率
+				monitorMaps.add(dataMap);
 			}
 		} catch (Exception e) {
 		}
 		return monitorMaps;
 	}
- 
-
+	
 	public static List<Map<String, Object>> diskInfos(Sigar sigar) throws Exception {
 		List<Map<String, Object>> monitorMaps = new ArrayList<Map<String, Object>>();
 		FileSystem fslist[] = sigar.getFileSystemList();
 		for (int i = 0; i < fslist.length; i++) {
-			Map<String, Object> monitorMap = new HashMap<String, Object>();
+			Map<String, Object> dataMap = new HashMap<String, Object>();
 			FileSystem fs = fslist[i];
 			// 文件系统类型名，比如本地硬盘、光驱、网络文件系统等
 			FileSystemUsage usage = sigar.getFileSystemUsage(fs.getDirName());
@@ -224,19 +225,19 @@ public static Map<String, Object> memory(Sigar sigar) {
 					break;
 				case 2: // TYPE_LOCAL_DISK : 本地硬盘
 	
-					monitorMap.put("os.disk.name", fs.getDevName());// 系统盘名称
-					monitorMap.put("os.disk.type", fs.getSysTypeName());// 盘类型
-					monitorMap.put("os.disk.options", fs.getOptions()); //读写权限
-					monitorMap.put("os.disk.flags", fs.getFlags());	
+					dataMap.put("os.disk.name", fs.getDevName());// 系统盘名称
+					dataMap.put("os.disk.type", fs.getSysTypeName());// 盘类型
+					dataMap.put("os.disk.options", fs.getOptions()); //读写权限
+					dataMap.put("os.disk.flags", fs.getFlags());	
 					// 文件系统总大小
-					monitorMap.put("os.disk.total", usage.getTotal());
+					dataMap.put("os.disk.total", usage.getTotal());
 					// 文件系统剩余大小
-					monitorMap.put("os.disk.free", usage.getFree());
+					dataMap.put("os.disk.free", usage.getFree());
 					// 文件系统已经使用量
-					monitorMap.put("os.disk.used", usage.getUsed());
+					dataMap.put("os.disk.used", usage.getUsed());
 					// 文件系统资源的利用率
-					monitorMap.put("os.disk.usage", usage.getUsePercent() * 100D);// 内存使用率
-					monitorMaps.add(monitorMap);
+					dataMap.put("os.disk.usage", usage.getUsePercent() * 100D);// 内存使用率
+					monitorMaps.add(dataMap);
 					break;
 				case 3:// TYPE_NETWORK ：网络
 					break;
