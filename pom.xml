@@ -23,14 +23,14 @@
 		<developerConnection>scm:git:git@github.com:vindell/${project.artifactId}.git</developerConnection>
 		<url>git@github.com:vindell/${project.artifactId}.git</url>
 	</scm>
-
+	
 	<developers>
-		<developer>
-			<id>vindell</id>
-			<name>万大龙</name>
-			<email>hnxyhcwdl1003@163.com</email>
-		</developer>
-	</developers>
+        <developer>
+        	<id>001</id>
+            <name>vindell</name>
+            <email>hnxyhcwdl1003@163.com</email>
+        </developer>
+    </developers> 
 	
 	<build>
 		<pluginManagement>
@@ -124,24 +124,6 @@
                         </excludes>
 					</configuration>					
 				</plugin>
-				<!-- <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.19.1</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>integration-test</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<includes>
-							<include>**/*.java</include>
-						</includes>
-						<groups>org.jmxtrans.agent.IntegrationTest</groups>
-					</configuration>
-				</plugin> -->
 				<!-- jar包生成插件 ：创建项目jar包--> 
 				<plugin>  					 
 					<groupId>org.apache.maven.plugins</groupId>  
@@ -165,96 +147,7 @@
 							</manifestEntries> -->
 	                    </archive>  
 	                </configuration>  
-	                <executions>
-						<!-- 增加关于接口打包的配置：配置后会在原有打包的基础上多打包一个api包
-						<execution>
-							<id>package-api</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-							<phase>package</phase>
-							<configuration>
-								<classifier>api</classifier>
-								<includes>
-									<include>**/interface/**</include>
-								</includes>
-							</configuration>
-						</execution> -->
-						<!-- <execution>
-							<id>package-all</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-							<phase>package</phase>
-							<configuration>
-								<classifier>all</classifier>
-								<includes>
-									<include>**</include>
-								</includes>
-							</configuration>
-						</execution> -->
-					</executions>
 				</plugin> 
-				<!-- jar包生成插件 ：使用模块自身代码和依赖jar包打包最终的jar --> 
-			    <plugin>  
-			        <groupId>org.apache.maven.plugins</groupId>  
-			        <artifactId>maven-shade-plugin</artifactId>  
-			        <version>2.4.3</version>
-			        <executions>  
-			            <execution>  
-			                <phase>package</phase>  
-			                <goals>  
-			                    <goal>shade</goal>  
-			                </goals>  
-			                <configuration>  
-			                    <transformers>
-			                    	<shadedArtifactId></shadedArtifactId>
-			                    	
-			                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">  
-			                            <mainClass>com.chenzhou.examples.Main</mainClass>  
-			                        </transformer> 
-			                       	<!-- 下面这段配置意思是把spring.handlers和spring.schemas文件以append方式加入到构建的jar包中，这样就不会出现xsd找不到的情况。
-			                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">  
-			                            <resource>META-INF/spring.handlers</resource>  
-			                        </transformer> 
-			                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">  
-			                            <resource>META-INF/spring.schemas</resource>  
-			                        </transformer>  
-			                       --> 
-			                    </transformers>  
-			                </configuration>  
-			            </execution>  
-			        </executions>  
-			    </plugin>
-			    <!-- assembly插件打包成jar包  -->
-	            <plugin>
-	                <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-assembly-plugin</artifactId>
-	                <version>2.4.1</version>
-	                <configuration>
-	                    <!-- get all project dependencies -->
-	                    <descriptorRefs>
-	                        <descriptorRef>jar-with-dependencies</descriptorRef>
-	                    </descriptorRefs>
-	                    <!-- MainClass in mainfest make a executable jar 
-	                    <archive>
-	                      <manifest>
-	                        <mainClass>xxx.xxx</mainClass>
-	                      </manifest>
-	                    </archive>
-	 					-->
-	                </configuration>
-	                <executions>
-	                  <execution>
-	                    <id>make-assembly</id>
-	                    <!-- bind to the packaging phase -->
-	                    <phase>package</phase> 
-	                    <goals>
-	                        <goal>single</goal>
-	                    </goals>
-	                  </execution>
-	                </executions>
-	            </plugin> 
 				<!-- 安装插件：将项目输出构件安装到本地仓库 --> 
 				<plugin>  					 
 					<groupId>org.apache.maven.plugins</groupId>  
@@ -267,17 +160,6 @@
 		            <artifactId>maven-deploy-plugin</artifactId>  
 		            <version>2.8.2</version>  
 		        </plugin>
-		        <!-- release插件: 自动进行工程版本升级 -->
-	            <plugin>
-	                <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-release-plugin</artifactId>
-	                <version>2.5.3</version>
-	                <configuration>
-	                    <!-- 设置分支跟里程碑的url -->
-	                    <branchBase>svn://121.43.110.87/jeefw/jeekit/branches</branchBase>
-	                    <tagBase>svn://121.43.110.87/jeefw/jeekit/tags</tagBase>
-	                </configuration>
-	            </plugin>	
 				<!-- 源码插件:发布时自动将源码同时发布 -->				
 				<plugin>
 					 <groupId>org.apache.maven.plugins</groupId>
@@ -328,78 +210,9 @@
 						</execution>
 					</executions>				
 		        </plugin>
-		        <!-- 依赖配置生成插件 ：自动复制maven依赖包到lib目录 -->  
-				<plugin>  
-		            <groupId>org.apache.maven.plugins</groupId>  
-		            <artifactId>maven-dependency-plugin</artifactId>  
-		            <version>2.10</version>  
-		        </plugin>
-		        <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.4.1</version>
-					<executions>
-						<execution>
-							<id>enforce-maven</id>
-							<goals>
-								<goal>enforce</goal>
-							</goals>
-							<configuration>
-								<rules>
-									<requireMavenVersion>
-										<version>3.3</version>
-									</requireMavenVersion>
-									<requireJavaVersion>
-										<version>1.7</version>
-									</requireJavaVersion>
-								</rules>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>1.4.0</version>
-					<extensions>true</extensions>
-					<configuration>
-						<instructions>
-							<Bundle-SymbolicName>${pom.groupId}.${pom.artifactId}</Bundle-SymbolicName>
-							<Bundle-Name>${pom.name}</Bundle-Name>
-							<Bundle-Version>${pom.version}</Bundle-Version>
-							<!-- <Bundle-Activator>com.javaworld.sample.tomcat.webActivator</Bundle-Activator>
-							<Export-Package>com.javaworld.sample.tomcat</Export-Package>
-							<Import-Package>org.osgi.framework</Import-Package> -->
-						</instructions>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				拷贝依赖的jar包到lib目录  
-	            <executions>  
-                    <execution>  
-                        <id>copy-dependencies</id>  
-                        <phase>compile</phase>  
-                        <goals>  
-                            <goal>copy-dependencies</goal>  
-                        </goals>  
-                        <configuration>  
-							<outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>  
-			                ${project.build.directory}为Maven内置变量，缺省为target  
-			                <outputDirectory>${project.build.directory}/lib</outputDirectory>  
-			                表示是否不包含间接依赖的包  
-			                <excludeTransitive>false</excludeTransitive>  
-			                表示复制的jar文件去掉版本信息  
-			                <stripVersion>true</stripVersion>  
-                        </configuration>  
-                    </execution>  
-                </executions>  
-				
-			</plugin> -->
 			<!-- 资源插件：复制主资源文件至主输出目录 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -414,12 +227,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<org.hyperic.sigar.path>${project.build.directory}/sigar-native-libs</org.hyperic.sigar.path>
-					</systemPropertyVariables>
-					<parallel>classes</parallel>
-				</configuration>
 			</plugin> 
 			<!-- jar包生成插件 ：创建项目jar包 -->
 			<plugin>  					 
@@ -440,11 +247,6 @@
 			<plugin>
 				 <groupId>org.apache.maven.plugins</groupId>
 				 <artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
 			</plugin>
 		</plugins>
 	</build>
