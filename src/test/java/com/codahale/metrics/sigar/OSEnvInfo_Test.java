@@ -32,10 +32,37 @@ public class OSEnvInfo_Test extends TestCase {
 		System.out.println("======================Info=============================");
 		Sigar sigar = (Sigar) SigarFactory.newSigar();
 		Map<String, Object> infoMap = OSEnvInfo.info(sigar);
-		for (String key : infoMap.keySet()) {
-			System.out.println(key + " : " + infoMap.get(key));
-		}
 		
+		System.out.println("用户名:    " + infoMap.get("host.username"));
+        System.out.println("计算机名:    " + infoMap.get("host.computer.name"));
+        System.out.println("计算机域名:    " + infoMap.get("host.userdomain"));
+        System.out.println("本地IP地址:    " + infoMap.get("host.ip"));
+        System.out.println("本地主机名:    " + infoMap.get("host.name"));
+		
+        System.out.println("操作系统CPU尾数:    " + infoMap.get("os.cpu.endian"));
+        System.out.println("操作系统位数:    " + infoMap.get("os.datamodel"));
+        System.out.println("os.machine:    " + infoMap.get("os.machine"));
+        
+        // 操作系统类型
+        System.out.println("操作系统类型:    " + infoMap.get("os.name"));
+        // 操作系统内核类型如： 386、486、586等x86
+        System.out.println("操作系统内核类型:    " + infoMap.get("os.arch"));
+        // 操作系统版本号
+        System.out.println("操作系统版本号:    " + infoMap.get("os.version"));
+        // 操作系统补丁级别
+        System.out.println("操作系统补丁级别:    " + infoMap.get("os.patch.level"));
+        // 操作系统描述
+        System.out.println("操作系统描述:    " + infoMap.get("os.desc"));
+        // 操作系统开发商
+        System.out.println("操作系统开发商:    " + infoMap.get("os.vendor"));
+        // 操作系统开发商名称
+        System.out.println("操作系统开发商名称:    " + infoMap.get("os.vendor.name"));
+        // 操作系统开发商代码
+        System.out.println("操作系统开发商代码:    " + infoMap.get("os.vendor.code"));
+        // 操作系统开发商类型
+        System.out.println("操作系统开发商代码:    " + infoMap.get("os.vendor.version"));
+        
+        
 	}
 	
 	public void testMemory() throws Exception {

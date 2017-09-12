@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
@@ -25,11 +24,9 @@ public class OSEnvInfo {
 	
 	public static Map<String, Object> info(Sigar sigar){
 		
-		System.out.println("==========================OperatingSystem=========================");
-		
 		Map<String, Object> infoMap = new HashMap<String, Object>();
 		
-        //==========================OperatingSystem=========================
+		//==========================OperatingSystem=========================
 
         InetAddress addr = null;
 		String ip = "127.0.0.1";
@@ -57,41 +54,36 @@ public class OSEnvInfo {
         String computerName = map.get("COMPUTERNAME");// 获取计算机名
         String userDomain = map.get("USERDOMAIN");// 获取计算机域名
         
-        
-        System.out.println("用户名:    " + userName);
-        System.out.println("计算机名:    " + computerName);
-        System.out.println("计算机域名:    " + userDomain);
-        System.out.println("本地IP地址:    " + ip);
-        System.out.println("本地主机名:    " + addr.getHostName());
-        
+        infoMap.put("host.username", userName);
+        infoMap.put("host.computer.name", computerName);
+        infoMap.put("host.userdomain", userDomain);
 
         OperatingSystem OS = OperatingSystem.getInstance();
-        // 操作系统内核类型如： 386、486、586等x86
-        System.out.println("操作系统:    " + OS.getArch());
-        System.out.println("操作系统CpuEndian():    " + OS.getCpuEndian());//
-        System.out.println("操作系统DataModel():    " + OS.getDataModel());//
-        // 系统描述
-        System.out.println("操作系统的描述:    " + OS.getDescription());
+        
+        // 操作系统CPU尾数
+        infoMap.put("os.cpu.endian", OS.getCpuEndian());
+        // 操作系统位数
+        infoMap.put("os.datamodel", OS.getDataModel());
+        infoMap.put("os.machine", OS.getMachine());
+        
         // 操作系统类型
-        // System.out.println("OS.getName():    " + OS.getName());
-        // System.out.println("OS.getPatchLevel():    " + OS.getPatchLevel());//
-        // 操作系统的卖主
-        System.out.println("操作系统的卖主:    " + OS.getVendor());
-        // 卖主名称
-        System.out.println("操作系统的卖主名:    " + OS.getVendorCodeName());
-        // 操作系统名称
-        System.out.println("操作系统名称:    " + OS.getVendorName());
-        // 操作系统卖主类型
-        System.out.println("操作系统卖主类型:    " + OS.getVendorVersion());
-        // 操作系统的版本号
-        System.out.println("操作系统的版本号:    " + OS.getVersion());
-        
-        
-		//获取操作系统相关信息  
-		Properties props = System.getProperties(); 
-		for (OSProperty vm : OSProperty.values()) {
-			infoMap.put(vm.getKey(), props.getProperty(vm.getKey()));
-		}
+        infoMap.put("os.name", OS.getName());
+        // 操作系统内核类型如： 386、486、586等x86
+        infoMap.put("os.arch", OS.getArch());
+        // 操作系统描述
+        infoMap.put("os.desc", OS.getDescription());
+        // 操作系统版本号
+        infoMap.put("os.version", OS.getVersion());
+        // 操作系统补丁级别
+        infoMap.put("os.patch.level", OS.getPatchLevel());
+        // 操作系统开发商
+        infoMap.put("os.vendor", OS.getVendor());
+        // 操作系统开发商名称
+        infoMap.put("os.vendor.name", OS.getVendorName());
+        // 操作系统开发商代码
+        infoMap.put("os.vendor.code", OS.getVendorCodeName());
+        // 操作系统开发商类型
+        infoMap.put("os.vendor.version", OS.getVendorVersion());
 		
         return infoMap;
         

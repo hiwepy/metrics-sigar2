@@ -1,5 +1,6 @@
 package com.codahale.metrics.sigar.utils;
 
+import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -43,51 +44,110 @@ public class JVMInfo {
         } catch (Exception e) {  
             return -1;  
         }  
-    } 
+    }
 	
-	public static Map<String, Object> info(){
-		
-		Map<String, Object> infoMap = new HashMap<String, Object>();
-		Properties props = System.getProperties(); 
-		//JVM属性 
+	public static Map<String, Object> info() {
+
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Properties props = System.getProperties();
+		// JVM属性
 		for (JVMProperty vm : JVMProperty.values()) {
-			infoMap.put(vm.getKey(), props.getProperty(vm.getKey()));
+			dataMap.put(vm.getKey(), props.getProperty(vm.getKey()));
 		}
 		
-		System.out.println("==========================Runtime=========================");
-		
-        RuntimeMXBean runtimeMBean = ManagementFactory.getRuntimeMXBean();
-       
-        infoMap.put(JVMProperty.JAVA_VM_PID.getKey(),  runtimeMBean.getName());
-        // 返回 Java 虚拟机实现名称。
-        infoMap.put(JVMProperty.JAVA_VM_NAME.getKey(), runtimeMBean.getVmName() );
-        // 返回 Java 虚拟机实现供应商。
-        infoMap.put(JVMProperty.JAVA_VM_VENDOR.getKey(), runtimeMBean.getVmVendor() );
-        // 返回 Java 虚拟机实现版本。
-        infoMap.put(JVMProperty.JAVA_VM_VERSION.getKey(), runtimeMBean.getVmVersion() );
-        // 返回传递给 Java 虚拟机的输入变量，其中不包括传递给 main 方法的变量。
-        infoMap.put(JVMProperty.JAVA_VM_OPTIONS.getKey(), StringUtils.join(runtimeMBean.getInputArguments().iterator(), " ") );
-        // 返回由引导类加载器用于搜索类文件的引导类路径。
-        infoMap.put(JVMProperty.JAVA_BOOT_CLASS_PATH.getKey(), runtimeMBean.getBootClassPath() );
-        // 返回系统类加载器用于搜索类文件的 Java 类路径。
-        infoMap.put(JVMProperty.JAVA_CLASS_PATH.getKey(), runtimeMBean.getClassPath() );
-        // 返回 Java 库路径。
-        infoMap.put(JVMProperty.JAVA_LIBRARY_PATH.getKey(), runtimeMBean.getLibraryPath() );
-        // 返回 Java 虚拟机的启动时间（以毫秒为单位）。
-        infoMap.put(JVMProperty.JAVA_RUNTIME_STARTTIME.getKey(),  runtimeMBean.getStartTime() );
-        // 返回 Java 虚拟机的正常运行时间（以毫秒为单位）。
-        infoMap.put(JVMProperty.JAVA_RUNTIME_UPTIME.getKey(),  runtimeMBean.getUptime() );
-        // 返回 Java 虚拟机规范名称。
-        infoMap.put(JVMProperty.JAVA_SPECIFICATION_NAME.getKey(),  runtimeMBean.getSpecName() );
-        // 返回 Java 虚拟机规范供应商。
-        infoMap.put(JVMProperty.JAVA_SPECIFICATION_VENDER.getKey(),  runtimeMBean.getSpecVendor() );
-        // 返回 Java 虚拟机规范版本。
-        infoMap.put(JVMProperty.JAVA_SPECIFICATION_VERSION.getKey(),  runtimeMBean.getSpecVersion() );
+		//获取操作系统相关信息  
+		for (JVMOSProperty vm : JVMOSProperty.values()) {
+			dataMap.put(vm.getKey(), props.getProperty(vm.getKey()));
+		}
+
+		// ==========================Runtime=========================
+
+		RuntimeMXBean runtimeMBean = ManagementFactory.getRuntimeMXBean();
+
+		dataMap.put(JVMProperty.JAVA_VM_PID.getKey(), runtimeMBean.getName());
+		// 返回 Java 虚拟机实现名称。
+		dataMap.put(JVMProperty.JAVA_VM_NAME.getKey(), runtimeMBean.getVmName());
+		// 返回 Java 虚拟机实现供应商。
+		dataMap.put(JVMProperty.JAVA_VM_VENDOR.getKey(), runtimeMBean.getVmVendor());
+		// 返回 Java 虚拟机实现版本。
+		dataMap.put(JVMProperty.JAVA_VM_VERSION.getKey(), runtimeMBean.getVmVersion());
+		// 返回传递给 Java 虚拟机的输入变量，其中不包括传递给 main 方法的变量。
+		dataMap.put(JVMProperty.JAVA_VM_OPTIONS.getKey(), StringUtils.join(runtimeMBean.getInputArguments().iterator(), " "));
+		// 返回由引导类加载器用于搜索类文件的引导类路径。
+		dataMap.put(JVMProperty.JAVA_BOOT_CLASS_PATH.getKey(), runtimeMBean.getBootClassPath());
+		// 返回系统类加载器用于搜索类文件的 Java 类路径。
+		dataMap.put(JVMProperty.JAVA_CLASS_PATH.getKey(), runtimeMBean.getClassPath());
+		// 返回 Java 库路径。
+		dataMap.put(JVMProperty.JAVA_LIBRARY_PATH.getKey(), runtimeMBean.getLibraryPath());
+		// 返回 Java 虚拟机的启动时间（以毫秒为单位）。
+		dataMap.put(JVMProperty.JAVA_RUNTIME_STARTTIME.getKey(), runtimeMBean.getStartTime());
+		// 返回 Java 虚拟机的正常运行时间（以毫秒为单位）。
+		dataMap.put(JVMProperty.JAVA_RUNTIME_UPTIME.getKey(), runtimeMBean.getUptime());
+		// 返回 Java 虚拟机规范名称。
+		dataMap.put(JVMProperty.JAVA_SPECIFICATION_NAME.getKey(), runtimeMBean.getSpecName());
+		// 返回 Java 虚拟机规范供应商。
+		dataMap.put(JVMProperty.JAVA_SPECIFICATION_VENDER.getKey(), runtimeMBean.getSpecVendor());
+		// 返回 Java 虚拟机规范版本。
+		dataMap.put(JVMProperty.JAVA_SPECIFICATION_VERSION.getKey(), runtimeMBean.getSpecVersion());
 		// 返回正在运行的 Java 虚拟机实现的管理接口的规范版本。
-        infoMap.put(JVMProperty.JAVA_MANAGEMENT_SPECIFICATION_VERSION.getKey(),  runtimeMBean.getManagementSpecVersion());
-        
-		return infoMap;
+		dataMap.put(JVMProperty.JAVA_MANAGEMENT_SPECIFICATION_VERSION.getKey(), runtimeMBean.getManagementSpecVersion());
+
+		// ==========================ClassLoading=========================
+
+		ClassLoadingMXBean mxBean = ManagementFactory.getClassLoadingMXBean();
+		// 返回当前加载到 Java 虚拟机中的类的数量。
+		dataMap.put("jvm.class.LoadedCount", mxBean.getLoadedClassCount());
+		// 返回自 Java 虚拟机开始执行到目前已经加载的类的总数。
+		dataMap.put("jvm.class.TotalLoadedCount", mxBean.getTotalLoadedClassCount());
+		// 返回自 Java 虚拟机开始执行到目前已经卸载的类的总数。
+		dataMap.put("jvm.class.UnloadedCount", mxBean.getUnloadedClassCount());
 		
+		// ==========================Compilation=========================
+
+		CompilationMXBean compilMBean = ManagementFactory.getCompilationMXBean();
+		// 返回即时 (JIT) 编译器的名称。
+		dataMap.put("jvm.compilation.name", compilMBean.getName());
+		// 返回在编译上花费的累积耗费时间的近似值（以毫秒为单位）。
+		dataMap.put("jvm.compilation.totalCompilationTime", compilMBean.getTotalCompilationTime());
+
+		// ==========================OperatingSystem=========================
+		
+		OperatingSystemMXBean osMBean = ManagementFactory.getOperatingSystemMXBean();
+		// 获取操作系统名称
+		dataMap.put("os.name", osMBean.getName());
+		// 返回操作系统的架构。
+		dataMap.put("os.arch", osMBean.getArch());
+		// 返回操作系统的版本。
+		dataMap.put("os.version", osMBean.getVersion());
+		// 返回 Java 虚拟机可以使用的处理器数目。
+		dataMap.put("os.cores", osMBean.getAvailableProcessors());
+		// 返回最后一分钟内系统加载平均值。
+		dataMap.put("os.loadaverage", osMBean.getSystemLoadAverage());
+		/*if (osMBean instanceof com.sun.management.OperatingSystemMXBean) {  
+           com.sun.management.OperatingSystemMXBean sunOSMXBean = (com.sun.management.OperatingSystemMXBean) osMBean;  
+           dataMap.put("os.ProcessCpuTime", sunOSMXBean.getProcessCpuTime());
+		} */ 
+
+		// ==========================Thread=========================
+
+		// 获取各个线程的各种状态，CPU 占用情况，以及整个系统中的线程状况
+		ThreadMXBean threadMBean = ManagementFactory.getThreadMXBean();
+
+		// 返回当前线程的总 CPU 时间（以毫微秒为单位）。
+		dataMap.put("jvm.thread.CurrentThreadCpuTime", threadMBean.getCurrentThreadCpuTime());
+		// 返回当前线程在用户模式中执行的 CPU 时间（以毫微秒为单位）。
+		dataMap.put("jvm.thread.CurrentThreadUserTime", threadMBean.getCurrentThreadUserTime());
+		// 返回活动守护线程的当前数目。
+		dataMap.put("jvm.thread.DaemonThreadCount", threadMBean.getDaemonThreadCount());
+		// 返回自从 Java 虚拟机启动或峰值重置以来峰值活动线程计数。
+		dataMap.put("jvm.thread.PeakThreadCount", threadMBean.getPeakThreadCount());
+		// 返回活动线程的当前数目，包括守护线程和非守护线程。
+		dataMap.put("jvm.thread.ThreadCount", threadMBean.getThreadCount());
+		// 返回自从 Java 虚拟机启动以来创建和启动的线程总数目。
+		dataMap.put("jvm.thread.TotalStartedThreadCount", threadMBean.getTotalStartedThreadCount());
+		
+		return dataMap;
+
 	}
 	
 	/**
@@ -238,66 +298,6 @@ public class JVMInfo {
         
 	}
 	
-	public static Map<String, Object> os(){
-		
-		//==========================OperatingSystem=========================
-		Map<String, Object> dataMap = new HashMap<String, Object>();
-        
-        OperatingSystemMXBean osMBean = ManagementFactory.getOperatingSystemMXBean();  
-        //获取操作系统相关信息  
-        dataMap.put("os.name", osMBean.getName());
-        // 返回操作系统的架构。
-        dataMap.put("os.arch", osMBean.getArch());
-        // 返回操作系统的版本。
-        dataMap.put("os.version", osMBean.getVersion());
-        // 返回 Java 虚拟机可以使用的处理器数目。
-        dataMap.put("os.cores", osMBean.getAvailableProcessors());
-        // 返回最后一分钟内系统加载平均值。
-        dataMap.put("os.loadaverage", osMBean.getSystemLoadAverage());
-        
-        return dataMap;
-        
-	}
-	
-	public static Map<String, Object> thread(){
-		
-		//==========================Thread=========================
-		Map<String, Object> dataMap = new HashMap<String, Object>();
-
-        //获取各个线程的各种状态，CPU 占用情况，以及整个系统中的线程状况  
-        ThreadMXBean threadMBean = ManagementFactory.getThreadMXBean(); 
-        
-        // 返回当前线程的总 CPU 时间（以毫微秒为单位）。
-        dataMap.put("jvm.thread.CurrentThreadCpuTime", threadMBean.getCurrentThreadCpuTime());
-        // 返回当前线程在用户模式中执行的 CPU 时间（以毫微秒为单位）。
-        dataMap.put("jvm.thread.CurrentThreadUserTime", threadMBean.getCurrentThreadUserTime());
-        // 返回活动守护线程的当前数目。
-        dataMap.put("jvm.thread.DaemonThreadCount", threadMBean.getDaemonThreadCount());
-        // 返回自从 Java 虚拟机启动或峰值重置以来峰值活动线程计数。
-        dataMap.put("jvm.thread.PeakThreadCount", threadMBean.getPeakThreadCount());
-        // 返回活动线程的当前数目，包括守护线程和非守护线程。
-        dataMap.put("jvm.thread.ThreadCount", threadMBean.getThreadCount());
-        // 返回自从 Java 虚拟机启动以来创建和启动的线程总数目。
-        dataMap.put("jvm.thread.TotalStartedThreadCount", threadMBean.getTotalStartedThreadCount());
-        
-        return dataMap;
-        
-	}
-	
-	public static Map<String, Object> compilation(){
-		
-		//==========================Compilation=========================
-		Map<String, Object> dataMap = new HashMap<String, Object>();
-		
-        CompilationMXBean compilMBean = ManagementFactory.getCompilationMXBean();   
-        //返回即时 (JIT) 编译器的名称。
-        dataMap.put("jvm.compilation.name", compilMBean.getName());
-        //返回在编译上花费的累积耗费时间的近似值（以毫秒为单位）。
-        dataMap.put("jvm.compilation.totalCompilationTime", compilMBean.getTotalCompilationTime());
-        
-        return dataMap;
-        
-	}
 	
 	public static List<Map<String, Object>> gc(){
 		

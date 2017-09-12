@@ -24,87 +24,21 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class CapacityUtils {
+import com.codahale.metrics.sigar.utils.CapacityUtils.Unit;
+
+public abstract class CapacityUtils2 {
 	
-	protected static Logger LOG = LoggerFactory.getLogger(CapacityUtils.class);
+	protected static Logger LOG = LoggerFactory.getLogger(CapacityUtils2.class);
 	protected static Pattern pattern_find = Pattern.compile("^([1-9]\\d*|[1-9]\\d*.\\d*|0.\\d*[1-9]\\d*)(B|KB|MB|GB|TB|PB|EB|ZB|YB|BB)$");
-	protected static Map<String,Unit> powers = new HashMap<String, Unit>();
-	
-	public static enum Unit {
-		/**
-		 * 未指定单位
-		 */
-		NONE("none" , BigDecimal.ONE),
-		/**
-		 * 1B = 1024bit * 8
-		 */
-		B("B" , BigDecimal.valueOf(1024 * 8)),
-		/**
-		 * 1KB(Kilobyte 千字节)=1024Byte
-		 */
-		KB("KB" , BigDecimal.valueOf(1024)),
-		/**
-		 * 1MB(Megabyte 兆字节 简称“兆”)=1024KB
-		 */
-		MB("MB" , BigDecimal.valueOf(1024 * 1024)),
-		/**
-		 * 1GB(Gigabyte 吉字节 又称“千兆”)=1024MB
-		 */
-		GB("GB" , BigDecimal.valueOf(1024 * 1024 * 1024)),
-		/**
-		 * 1TB(Trillionbyte 万亿字节 太字节)=1024GB
-		 */
-		TB("TB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024)),
-		/**
-		 * 1PB（Petabyte 千万亿字节 拍字节）=1024TB
-		 */
-		PB("PB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024 * 1024)),
-		/**
-		 * 1EB（Exabyte 百亿亿字节 艾字节）=1024PB
-		 */
-		EB("EB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024 * 1024 * 1024)),
-		/**
-		 * 1ZB(Zettabyte 十万亿亿字节 泽字节)= 1024 EB
-		 */
-		ZB("ZB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)),
-		/**
-		 * 1YB(Yottabyte 一亿亿亿字节 尧字节)= 1024 ZB
-		 */
-		YB("YB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)),
-		/**
-		 * 1BB(Brontobyte 一千亿亿亿字节)= 1024 YB 
-		 */
-		BB("BB" , BigDecimal.valueOf(1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024));
-		
-		protected String key;
-		protected BigDecimal value;
-		
-		Unit(String key,BigDecimal value){
-			this.key = key;
-			this.value = value;
-		}
-		
-		public String getKey() {
-			return key;
-		}
-		
-		public BigDecimal getValue() {
-			return value;
-		}
-	}
+	protected static Map<String,CapacityUnit> powers = new HashMap<String, CapacityUnit>();
 	
 	
 	static{
-		powers.put(Unit.KB.getKey(), Unit.KB);
-		powers.put(Unit.MB.getKey(), Unit.MB);
-		powers.put(Unit.GB.getKey(), Unit.GB);
-		powers.put(Unit.TB.getKey(), Unit.TB);
 		
-		powers.put(Unit.PB.getKey(), Unit.PB);
-		powers.put(Unit.EB.getKey(), Unit.EB);
-		powers.put(Unit.ZB.getKey(), Unit.ZB);
-		powers.put(Unit.YB.getKey(), Unit.YB);
-		powers.put(Unit.BB.getKey(), Unit.BB);
+		powers.put("KB", CapacityUnit.KILOBYTES);
+		powers.put("MB", CapacityUnit.MEGABYTES);
+		powers.put("GB", CapacityUnit.GIGABYTES);
+		powers.put("TB", CapacityUnit.TRILLIONBYTES);
 		
 	}
 	
@@ -119,8 +53,7 @@ public abstract class CapacityUtils {
 		Matcher matcher = pattern_find.matcher(value);
 		if(matcher.find()) {
 			BigDecimal num = new BigDecimal(matcher.group(1));
-			BigDecimal mult = powers.get(matcher.group(2)).getValue();
-			return num.multiply(mult);
+			return new BigDecimal(powers.get(matcher.group(2)).toKilobytes(num.doubleValue()));
 		} else {
 			return BigDecimal.ZERO;
 		}
@@ -134,8 +67,7 @@ public abstract class CapacityUtils {
 		Matcher matcher = pattern_find.matcher(value);
 		if(matcher.find()) {
 			Long num = Long.valueOf(matcher.group(1));
-			BigDecimal mult = powers.get(matcher.group(2)).getValue();
-			return num.longValue() * mult.longValue();
+			return new BigDecimal(powers.get(matcher.group(2)).toKilobytes(num.doubleValue())).longValue();
 		} else {
 			return 0;
 		}
@@ -149,8 +81,7 @@ public abstract class CapacityUtils {
 		Matcher matcher = pattern_find.matcher(value);
 		if(matcher.find()) {
 			Float num = Float.valueOf(matcher.group(1));
-			BigDecimal mult = powers.get(matcher.group(2)).getValue();
-			return num.floatValue() * mult.floatValue();
+			return new BigDecimal(powers.get(matcher.group(2)).toKilobytes(num.doubleValue())).floatValue();
 		} else {
 			return -1;
 		}

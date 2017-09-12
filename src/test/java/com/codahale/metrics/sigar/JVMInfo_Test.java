@@ -20,21 +20,13 @@ import java.util.Map;
 
 import com.codahale.metrics.sigar.utils.CapacityUtils.Unit;
 import com.codahale.metrics.sigar.utils.JVMInfo;
+import com.codahale.metrics.sigar.utils.JVMProperty;
 import com.codahale.metrics.sigar.utils.MemoryInfo;
 
 import junit.framework.TestCase;
 
 public class JVMInfo_Test extends TestCase {
 
-	public void testOs() throws Exception {
-		
-		System.out.println("======================OS=============================");
-		
-		Map<String, Object> infoMap = JVMInfo.os();
-		for (String key : infoMap.keySet()) {
-			System.out.println(key + " : " + infoMap.get(key));
-		}
-	}
 
 	public void testInfo() throws Exception {
 		System.out.println("======================info=============================");
@@ -43,9 +35,20 @@ public class JVMInfo_Test extends TestCase {
 			System.out.println(key + " : " + infoMap.get(key));
 		}
 		
+		
+		long estimatedTime = System.currentTimeMillis() - Long.parseLong(String.valueOf(infoMap.get(JVMProperty.JAVA_RUNTIME_STARTTIME.getKey())));
+
+		System.out.println("运行时间:" + estimatedTime / 1000 / 60);
+		
+		long estimatedUpTime = Long.parseLong(String.valueOf(infoMap.get(JVMProperty.JAVA_RUNTIME_UPTIME)));
+		
+		System.out.println("进程 CPU 时间:" + estimatedUpTime / 1000 / 60);
+		
+		
+		
 	}
 
-	public void testMemory_MB() throws Exception {
+	public void wtestMemory_MB() throws Exception {
 		System.out.println("======================runtime=============================");
 		System.out.println(JVMInfo.runtime(Unit.MB));
 	}
@@ -55,7 +58,7 @@ public class JVMInfo_Test extends TestCase {
 
 	}*/
 	
-	public void testMemory() throws Exception {
+	public void wtestMemory() throws Exception {
 		
 		System.out.println("======================memory=============================");
 		
@@ -67,7 +70,7 @@ public class JVMInfo_Test extends TestCase {
 		}
 	}
 	
-	public void testMemoryPool() throws Exception {
+	public void wtestMemoryPool() throws Exception {
 		
 		System.out.println("======================memoryPool=============================");
 		 
@@ -79,15 +82,7 @@ public class JVMInfo_Test extends TestCase {
 		}
 	}
 	
-	public void testCompilation() throws Exception {
-		System.out.println("==========================Compilation=========================");
-		Map<String, Object> infoMap = JVMInfo.compilation();
-		for (String key : infoMap.keySet()) {
-			System.out.println(key + " : " + infoMap.get(key));
-		}
-	}
-	
-	public void testGc() throws Exception {
+	public void wtestGc() throws Exception {
 		System.out.println("==========================GarbageCollector=========================");
 		for (Map<String, Object> infoMap : JVMInfo.gc()) {
 			for (String key : infoMap.keySet()) {
