@@ -8,18 +8,21 @@ import org.hyperic.sigar.NetInterfaceConfig;
 import org.hyperic.sigar.NetInterfaceStat;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
-import org.hyperic.sigar.SigarFactory;
+
+import kamon.sigar.SigarProvisioner;
 
 public class SystemRuntime {
 	
 	private Sigar sigar = null;
 
-	public void update() {
-		sigar = (Sigar) SigarFactory.newSigar();
+	public void update() throws Exception {
+		SigarProvisioner.provision();
+		sigar = new Sigar();
 	}
 
-	public SystemRuntime() {
-		sigar = (Sigar) SigarFactory.newSigar();
+	public SystemRuntime() throws Exception {
+		SigarProvisioner.provision();
+		sigar = new Sigar();
 	}
 
 	public Mem memory() throws SigarException {

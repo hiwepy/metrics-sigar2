@@ -20,17 +20,25 @@ import java.util.Map;
 
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarFactory;
 
 import com.codahale.metrics.sigar.utils.OSEnvInfo;
 
 import junit.framework.TestCase;
+import kamon.sigar.SigarProvisioner;
 
 public class OSEnvInfo_Test extends TestCase {
 
+	static {
+		try {
+			SigarProvisioner.provision();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void testInfo() throws Exception {
 		System.out.println("======================Info=============================");
-		Sigar sigar = (Sigar) SigarFactory.newSigar();
+		Sigar sigar = new Sigar();
 		Map<String, Object> infoMap = OSEnvInfo.info(sigar);
 		
 		System.out.println("用户名:    " + infoMap.get("host.username"));
@@ -67,7 +75,7 @@ public class OSEnvInfo_Test extends TestCase {
 	
 	public void testMemory() throws Exception {
 		System.out.println("======================memory=============================");
-		Sigar sigar = (Sigar) SigarFactory.newSigar();
+		Sigar sigar = new Sigar();
 		Map<String, Object> infoMap = OSEnvInfo.memory(sigar);
 		for (String key : infoMap.keySet()) {
 			System.out.println(key + " : " + infoMap.get(key));
@@ -77,7 +85,7 @@ public class OSEnvInfo_Test extends TestCase {
 	
 	public void testUsage() throws Exception {
 		System.out.println("======================usage=============================");
-		Sigar sigar = (Sigar) SigarFactory.newSigar();
+		Sigar sigar = new Sigar();
 		Map<String, Double> infoMap = OSEnvInfo.usage(sigar);
 		for (String key : infoMap.keySet()) {
 			System.out.println(key + " : " + CpuPerc.format(infoMap.get(key)));
@@ -87,7 +95,7 @@ public class OSEnvInfo_Test extends TestCase {
 	
 	public void testCpuInfos() throws Exception {
 		System.out.println("======================CpuInfos=============================");
-		Sigar sigar = (Sigar) SigarFactory.newSigar();
+		Sigar sigar = new Sigar();
 		List<Map<String, Object>> infoMap = OSEnvInfo.cpuInfos(sigar);
 		for (Map<String, Object> map : infoMap) {
 			for (String key : map.keySet()) {
@@ -99,7 +107,7 @@ public class OSEnvInfo_Test extends TestCase {
 	
 	public void testDiskInfos() throws Exception {
 		System.out.println("======================DiskInfos=============================");
-		Sigar sigar = (Sigar) SigarFactory.newSigar();
+		Sigar sigar = new Sigar();
 		List<Map<String, Object>> infoMap = OSEnvInfo.diskInfos(sigar);
 		for (Map<String, Object> map : infoMap) {
 			for (String key : map.keySet()) {

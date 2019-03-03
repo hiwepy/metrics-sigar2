@@ -16,11 +16,20 @@ import org.hyperic.sigar.NetInterfaceStat;
 import org.hyperic.sigar.OperatingSystem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
-import org.hyperic.sigar.SigarFactory;
 import org.hyperic.sigar.Swap;
 import org.hyperic.sigar.Who;
 
+import kamon.sigar.SigarProvisioner;
+
 public class RuntimeTest {
+	
+	static {
+		try {
+			SigarProvisioner.provision();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
     public static void main(String[] args) {
         try {
@@ -101,7 +110,7 @@ public class RuntimeTest {
     }
 
     private static void memory() throws SigarException {
-        Sigar sigar = (Sigar) SigarFactory.newSigar();
+       Sigar sigar = new Sigar();
         Mem mem = sigar.getMem();
         // 内存总量
         System.out.println("内存总量:    " + mem.getTotal() / 1024L + "K av");
@@ -119,7 +128,7 @@ public class RuntimeTest {
     }
 
     private static void cpu() throws SigarException {
-        Sigar sigar = (Sigar) SigarFactory.newSigar();
+       Sigar sigar = new Sigar();
         CpuInfo infos[] = sigar.getCpuInfoList();
         CpuPerc cpuList[] = null;
         cpuList = sigar.getCpuPercList();
@@ -167,7 +176,7 @@ public class RuntimeTest {
     }
 
     private static void who() throws SigarException {
-        Sigar sigar = (Sigar) SigarFactory.newSigar();
+       Sigar sigar = new Sigar();
         Who[] who = sigar.getWhoList();
         if (who != null && who.length > 0) {
             for (int i = 0; i < who.length; i++) {
@@ -183,7 +192,7 @@ public class RuntimeTest {
     }
 
     private static void file() throws Exception {
-        Sigar sigar = (Sigar) SigarFactory.newSigar();
+       Sigar sigar = new Sigar();
         FileSystem fslist[] = sigar.getFileSystemList();
         for (int i = 0; i < fslist.length; i++) {
             System.out.println("分区的盘符名称" + i);
@@ -235,7 +244,7 @@ public class RuntimeTest {
     }
 
     private static void net() throws Exception {
-        Sigar sigar = (Sigar) SigarFactory.newSigar();
+       Sigar sigar = new Sigar();
         String ifNames[] = sigar.getNetInterfaceList();
         for (int i = 0; i < ifNames.length; i++) {
             String name = ifNames[i];
@@ -260,8 +269,7 @@ public class RuntimeTest {
     }
 
     private static void ethernet() throws SigarException {
-        Sigar sigar = null;
-        sigar = (Sigar) SigarFactory.newSigar();
+    	Sigar sigar = new Sigar();
         String[] ifaces = sigar.getNetInterfaceList();
         for (int i = 0; i < ifaces.length; i++) {
             NetInterfaceConfig cfg = sigar.getNetInterfaceConfig(ifaces[i]);
