@@ -395,7 +395,7 @@
 		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
 		<metrics.version>4.0.5</metrics.version>
-		<mockito.version>2.0.2-beta</mockito.version>
+		<mockito.version>2.23.4</mockito.version>
 		<slf4j.version>1.7.26</slf4j.version>
 		<sigar.version>1.6.5.132-6</sigar.version><!-- 1.6.4，1.6.5.132-6 -->
 		<sigar-native.version>1.0.2.RELEASE</sigar-native.version>
@@ -424,16 +424,22 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 			
-			<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+			<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
 			<dependency>
-			    <groupId>org.hamcrest</groupId>
-			    <artifactId>hamcrest-all</artifactId>
-			    <version>${hamcrest.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+	             <groupId>org.hamcrest</groupId>
+	             <artifactId>hamcrest-core</artifactId>
+	             <version>${hamcrest.version}</version>
+	         </dependency>
+	         <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library -->
+	         <dependency>
+	             <groupId>org.hamcrest</groupId>
+	             <artifactId>hamcrest-library</artifactId>
+	             <version>${hamcrest.version}</version>
+	         </dependency>
+			<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 			<dependency>
 			    <groupId>org.mockito</groupId>
-			    <artifactId>mockito-all</artifactId>
+			    <artifactId>mockito-core</artifactId>
 			    <version>${mockito.version}</version>
 			</dependency>
 			
@@ -480,18 +486,24 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
 		<dependency>
-		    <groupId>org.hamcrest</groupId>
-		    <artifactId>hamcrest-all</artifactId>
-		    <scope>test</scope>
-		</dependency>
+             <groupId>org.hamcrest</groupId>
+             <artifactId>hamcrest-core</artifactId>
+             <scope>test</scope>
+         </dependency>
+         <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library -->
+         <dependency>
+             <groupId>org.hamcrest</groupId>
+             <artifactId>hamcrest-library</artifactId>
+             <scope>test</scope>
+         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-all</artifactId>
-		    <scope>test</scope>
-		</dependency>
+             <groupId>org.mockito</groupId>
+             <artifactId>mockito-core</artifactId>
+             <scope>test</scope>
+         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
