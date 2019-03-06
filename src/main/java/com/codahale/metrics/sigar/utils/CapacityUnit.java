@@ -16,14 +16,8 @@
 package com.codahale.metrics.sigar.utils;
 
 /**
- * 
- * @className	： CapacityUnit
- * @description	： 
- * @author 		： <a href="https://github.com/vindell">vindell</a>
- * @date		： 2017年6月30日 上午9:05:39
- * @version 	V1.0
- * @see http://www.mamicode.com/info-detail-1068774.html
- * 
+ * http://www.mamicode.com/info-detail-1068774.html
+ * @author <a href="https://github.com/vindell">vindell</a>
  */
 public enum CapacityUnit {
 	
