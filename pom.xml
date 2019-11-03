@@ -529,13 +529,11 @@
 		<dependency>
 			<groupId>org.hyperic</groupId>
 			<artifactId>sigar</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.vindell/sigar-native -->
 		<dependency>
 			<groupId>com.github.vindell</groupId>
 			<artifactId>sigar-native</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.kamon/sigar-loader -->
 		<!-- <dependency>
