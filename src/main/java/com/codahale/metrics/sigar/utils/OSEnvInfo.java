@@ -175,7 +175,7 @@ public class OSEnvInfo {
 	 *	st：虚拟机偷取时间
 	 * 
 	 * @description	： TODO
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @date 		：2017年6月20日 下午5:28:55
 	 * @param sigar
 	 * @return

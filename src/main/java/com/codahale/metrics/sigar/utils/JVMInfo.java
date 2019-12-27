@@ -153,7 +153,7 @@ public class JVMInfo {
 	/**
 	 * 
 	 * @description	： TODO
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
 	 * @date 		：2017年6月19日 下午4:29:55
 	 * @param unit
 	 * @return
