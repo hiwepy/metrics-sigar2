@@ -42,7 +42,7 @@ public abstract class CapacityUtils2 {
 		
 	}
 	
-	/**
+	/*
 	 * 计算指定数值单位对应的字节数：如 1KB 计算得到 1024
 	 */
 	public static BigDecimal getCapacity(String value){
@@ -95,13 +95,8 @@ public abstract class CapacityUtils2 {
 		return getCapacityString(value, unit, 0);
 	}
 	
-	/**
-	 * @description	： 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指 定精度，以后的数字四舍五入。
-	 * @date 		：2017年6月19日 下午4:21:38
-	 * @param value	
-	 * @param unit	
-	 * @param scale	
-	 * @return	
+	/*
+	 * 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指 定精度，以后的数字四舍五入。
 	 */
 	public static BigDecimal getCapacity(long value,Unit unit, int scale){
 		if (scale < 0) {
