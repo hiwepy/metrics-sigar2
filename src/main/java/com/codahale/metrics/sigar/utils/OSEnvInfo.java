@@ -152,7 +152,7 @@ public class OSEnvInfo {
 		return dataMap;
 	}
 
-	/**
+	/*
 	 * 
 	 * 	Cpu(s)表示的是cpu信息。各个值的意思是：
 	 *	us: user cpu time (or) % CPU time spent in user space

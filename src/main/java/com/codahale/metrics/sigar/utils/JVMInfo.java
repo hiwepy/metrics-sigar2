@@ -150,15 +150,6 @@ public class JVMInfo {
 
 	}
 	
-	/**
-	 * 
-	 * @description	： TODO
-	 * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
-	 * @date 		：2017年6月19日 下午4:29:55
-	 * @param unit
-	 * @return
-	 * @see http://blog.csdn.net/wgw335363240/article/details/8878644
-	 */
 	public static Map<String, Object> runtime(Unit unit){
 		
 		Runtime r = Runtime.getRuntime();
